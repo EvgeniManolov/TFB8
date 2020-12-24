@@ -101,11 +101,11 @@
         [HttpPost()]
         public IHttpActionResult Post(Discipline discipline)
         {
-            IHttpActionResult ret = null;
+            IHttpActionResult result = null;
 
             if (discipline is null)
             {
-                ret = NotFound();
+                result = NotFound();
             }
             else
             {
@@ -123,28 +123,28 @@
                             command.ExecuteNonQuery();
                         }
 
-                        ret = Created<Discipline>(Request.RequestUri +
+                        result = Created<Discipline>(Request.RequestUri +
                                                   discipline.DisciplineId.ToString(),
                             discipline);
                     }
                     catch
                     {
-                        ret = NotFound();
+                        result = NotFound();
                     }
                 }
             }
 
-            return ret;
+            return result;
         }
 
         [HttpPut()]
         public IHttpActionResult Put(int id, Discipline discipline)
         {
-            IHttpActionResult ret = null;
+            IHttpActionResult result = null;
 
             if (id == 0 || discipline is null)
             {
-                ret = NotFound();
+                result = NotFound();
             }
             else
             {
@@ -165,14 +165,50 @@
                     }
                     catch
                     {
-                        ret = NotFound();
+                        result = NotFound();
                     }
-                    ret = Ok(discipline);
+                    result = Ok(discipline);
                 }
 
             }
 
-            return ret;
+            return result;
+        }
+
+        // DELETE api/<controller>/5
+        [HttpDelete()]
+        public IHttpActionResult Delete(int id)
+        {
+            IHttpActionResult result = null;
+
+            if (id != 0)
+            {
+                using (MySqlConnection con = new MySqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    try
+                    {
+                        using (MySqlCommand command = new MySqlCommand(
+                            "DELETE from tfb8.discipline where disciplineid = @DisciplineId", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("DisciplineId", id));
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    catch
+                    {
+                        result = NotFound();
+                    }
+                    result = Ok();
+                }
+            }
+            else
+            {
+                result = NotFound();
+            }
+
+            return result;
         }
     }
 }

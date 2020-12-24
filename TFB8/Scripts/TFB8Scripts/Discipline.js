@@ -162,6 +162,14 @@ function disciplineBuildTableRow(discipline) {
         "</td>" +
         "<td>" + discipline.DisciplineName + "</td>" +
         "<td>" + discipline.ProfessorName + "</td>" +
+        "<td>" +
+        "<button type='button' " +
+        "onclick='disciplineDelete(this);' " +
+        "class='btn btn-default' " +
+        "data-id='" + discipline.DisciplineId + "'>" +
+        "<span class='fa fa-remove' />" +
+        "</button>" +
+        "</td>" +
         "</tr>";
 
 
@@ -171,6 +179,22 @@ function disciplineBuildTableRow(discipline) {
 
 function addClick() {
     formClear();
+}
+
+function disciplineDelete(ctl) {
+    var id = $(ctl).data("id");
+
+    // Call Web API to delete a  discipline
+    $.ajax({
+        url: "/api/Discipline/" + id,
+        type: 'DELETE',
+        success: function (discipline) {
+            $(ctl).parents("tr").remove();
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
 }
 
 // Handle exceptions from AJAX calls
