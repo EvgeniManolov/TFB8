@@ -3,142 +3,184 @@
 <head>
     <meta charset="utf-8" />
     <link href="../Content/bootstrap.css" rel="stylesheet" />
-
+    <script src=" https://use.fontawesome.com/3183c4af00.js"></script>
     <script src="../Scripts/jquery-3.5.1.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <h2>Disciplines</h2>
-            </div>
+<input type="hidden" id="productid" value="0" />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>Disciplines</h2>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <table id="disciplineTable"
-                       class="table table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Discipline name</th>
-                            <th>Professor name</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <table id="disciplineTable"
+                   class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Edit</th>
+                    <th>Discipline name</th>
+                    <th>Professor name</th>
+                </tr>
+                </thead>
+            </table>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <button type="button" id="addButton"
-                        class="btn btn-primary"
-                        onclick="addClick();">
-                    Add Discipline
-                </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <button type="button" id="addButton"
+                    class="btn btn-primary"
+                    onclick="addClick();">
+                Add Discipline
+            </button>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        Discipline Information
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    Discipline Information
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="disciplinename">
+                            Discipline Name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="disciplinename"/>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="disciplinename">
-                                Discipline Name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="disciplinename" />
-                        </div>
-                        <div class="form-group">
-                            <label for="professorname">
-                                Professor name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="professorname" />
-                        </div>
+                    <div class="form-group">
+                        <label for="professorname">
+                            Professor name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="professorname"/>
                     </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <button type="button" id="updateButton"
-                                        class="btn btn-primary"
-                                        onclick="updateClick();">
-                                    Add
-                                </button>
-                            </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button type="button" id="updateButton"
+                                    class="btn btn-primary"
+                                    onclick="updateClick();">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            disciplinesList();
+</div>
+<script>
+    $(document).ready(function() {
+        disciplinesList();
+    });
+
+    function disciplineGet(ctl) {
+        // Get product id from data- attribute
+        var id = $(ctl).data("id");
+
+        // Store discipline id in hidden field
+        $("#disciplineid").val(id);
+
+        // Call Web API to get a discipline
+        $.ajax({
+            url: "/api/Discipline/" + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function(discipline) {
+                disciplineToFields(discipline);
+
+                // Change Update Button Text
+                $("#updateButton").text("Update");
+            },
+            error: function(request, message, error) {
+                handleException(request, message, error);
+            }
         });
+    }
 
-        function disciplinesList() {
-            // Call Web API to get a list of Disciplines
-            $.ajax({
-                url: '/api/Discipline/',
-                type: 'GET',
-                dataType: 'json',
-                success: function (disciplines) {
-                    disciplineListSuccess(disciplines);
-                },
-                error: function (request, message, error) {
-                    handleException(request, message, error);
-                }
-            });
-        }
+    function disciplineToFields(discipline) {
+        $("#disciplinename").val(discipline.DisciplineName);
+        $("#professorname").val(discipline.ProfessorName);
+    }
 
-        // Display all Disciplines returned from Web API call
-        function disciplineListSuccess(disciplines) {
-            // Iterate over the collection of data
-            $.each(disciplines, function (index, discipline) {
+    function disciplinesList() {
+        // Call Web API to get a list of Disciplines
+        $.ajax({
+            url: '/api/Discipline/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(disciplines) {
+                disciplineListSuccess(disciplines);
+            },
+            error: function(request, message, error) {
+                handleException(request, message, error);
+            }
+        });
+    }
+
+    // Display all Disciplines returned from Web API call
+    function disciplineListSuccess(disciplines) {
+        // Iterate over the collection of data
+        $.each(disciplines,
+            function(index, discipline) {
                 // Add a row to the Discipline table
                 disciplineAddRow(discipline);
             });
+    }
+
+    // Add Discipline row to <table>
+    function disciplineAddRow(discipline) {
+        if ($("#disciplineTable tbody").length == 0) {
+            $("#disciplineTable").append("<tbody></tbody>");
         }
 
-        // Add Discipline row to <table>
-        function disciplineAddRow(discipline) {
-            if ($("#disciplineTable tbody").length == 0) {
-                $("#disciplineTable").append("<tbody></tbody>");
-            }
+        // Append row to <table>
+        $("#disciplineTable tbody").append(
+            disciplineBuildTableRow(discipline));
+    }
 
-            // Append row to <table>
-            $("#disciplineTable tbody").append(
-                disciplineBuildTableRow(discipline));
+    // Build a <tr> for a row of table data
+    function disciplineBuildTableRow(discipline) {
+        var result = "<tr>" +
+            "<td>" +
+            "<button type='button' " +
+            "onclick='disciplineGet(this);' " +
+            "class='btn btn-default' " +
+            "data-id='" + discipline.DisciplineId + "'>" +
+            "<i class='fa fa-pencil'></i>" +
+            "</button>" +
+            "</td>" +
+            "<td>" + discipline.DisciplineName + "</td>" +
+            "<td>" + discipline.ProfessorName + "</td>" +
+            "</tr>";
+
+      
+
+        return result;
+    }
+
+
+    // Handle exceptions from AJAX calls
+    function handleException(request, message, error) {
+        var msg = "";
+
+        msg += "Code: " + request.status + "\n";
+        msg += "Text: " + request.statusText + "\n";
+        if (request.responseJSON != null) {
+            msg += "Message" + request.responseJSON.Message + "\n";
         }
 
-        // Build a <tr> for a row of table data
-        function disciplineBuildTableRow(discipline) {
-            var result = "<tr>" +
-                "<td>" + discipline.DisciplineName + "</td>" +
-                "<td>" + discipline.ProfessorName + "</td>" +
-                "</tr>";
-
-            return result;
-        }
-
-
-        // Handle exceptions from AJAX calls
-        function handleException(request, message, error) {
-            var msg = "";
-
-            msg += "Code: " + request.status + "\n";
-            msg += "Text: " + request.statusText + "\n";
-            if (request.responseJSON != null) {
-                msg += "Message" + request.responseJSON.Message + "\n";
-            }
-
-            alert(msg);
-        }
-    </script>
+        alert(msg);
+    }
+</script>
 </body>
 </html>
 
