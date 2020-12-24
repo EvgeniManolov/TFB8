@@ -41,7 +41,6 @@
                 con.Close();
             }
 
-
             if (list.Count > 0)
             {
                 result = Ok(list);
