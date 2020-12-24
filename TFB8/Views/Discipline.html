@@ -8,7 +8,7 @@
     <script src="../Scripts/bootstrap.min.js"></script>
 </head>
 <body>
-<input type="hidden" id="productid" value="0" />
+<input type="hidden" id="disciplineid" value="0" />
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
@@ -82,8 +82,90 @@
         disciplinesList();
     });
 
+    var Discipline = {
+        DisciplineId: 0,
+        DisciplineName: "",
+        ProfessorName: "",
+    }
+
+    function updateClick() {
+        // Build Discipline object from inputs
+        Discipline = new Object();
+        Discipline.DisciplineId = $("#disciplineid").val();
+        Discipline.DisciplineName = $("#disciplinename").val();
+        Discipline.ProfessorName = $("#professorname").val();
+
+        if ($("#updateButton").text().trim() == "Add") {
+            disciplineAdd(Discipline);
+        }
+        else {
+            disciplineUpdate(Discipline);
+        }
+    }
+
+    function disciplineUpdate(discipline) {
+        var url = "/api/Discipline/" + discipline.DisciplineId;
+
+        // Call Web API to update discipline
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(discipline),
+            success: function (discipline) {
+                disciplineUpdateSuccess(discipline);
+            },
+            error: function (request, message, error) {
+                handleException(request, message, error);
+            }
+        });
+    }
+
+    function disciplineUpdateSuccess(discipline) {
+        var row = document.getElementsByTagName('tbody')[0];
+        row.parentNode.removeChild(row);
+
+        disciplinesList();
+        formClear();
+    }
+
+    function disciplineAdd(discipline) {
+        // Call Web API to add a new discipline
+        $.ajax({
+            url: "/api/Discipline",
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(discipline),
+            success: function (discipline) {
+                disciplineAddSuccess(discipline);
+            },
+            error: function (request, message, error) {
+                handleException(request, message, error);
+            }
+        });
+    }
+    
+    function disciplineAddSuccess(discipline) {
+        var row = document.getElementsByTagName('tbody')[0];
+        row.parentNode.removeChild(row);
+
+        disciplinesList();
+        formClear();
+    }
+
+    function deleteRow () {
+        row.parentNode.removeChild(row);
+    };
+
+    // Clear form fields
+    function formClear() {
+        $("#disciplinename").val("");
+        $("#professorname").val("");
+    }
+
+
     function disciplineGet(ctl) {
-        // Get product id from data- attribute
+        // Get discipline id from data- attribute
         var id = $(ctl).data("id");
 
         // Store discipline id in hidden field
@@ -167,6 +249,9 @@
         return result;
     }
 
+    function addClick() {
+        formClear();
+    }
 
     // Handle exceptions from AJAX calls
     function handleException(request, message, error) {

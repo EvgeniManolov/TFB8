@@ -1,6 +1,7 @@
 ﻿namespace TFB8.Controllers
 {
     using MySql.Data.MySqlClient;
+    using System;
     using System.Collections.Generic;
     using System.Web.Http;
     using TFB8.Models;
@@ -94,6 +95,85 @@
             }
 
             return result;
+        }
+
+
+        // POST api/<controller>
+        [HttpPost()]
+        public IHttpActionResult Post(Discipline discipline)
+        {
+            IHttpActionResult ret = null;
+
+            if (discipline is null)
+            {
+                ret = NotFound();
+            }
+            else
+            {
+                using (MySqlConnection con = new MySqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    try
+                    {
+                        using (MySqlCommand command = new MySqlCommand(
+                            "INSERT into tfb8.discipline values (default, @DisciplineName, @ProfessorName)", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("DisciplineName", discipline.DisciplineName));
+                            command.Parameters.Add(new MySqlParameter("ProfessorName", discipline.ProfessorName));
+                            command.ExecuteNonQuery();
+                        }
+
+                        ret = Created<Discipline>(Request.RequestUri +
+                                                  discipline.DisciplineId.ToString(),
+                            discipline);
+                    }
+                    catch
+                    {
+                        ret = NotFound();
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        [HttpPut()]
+        public IHttpActionResult Put(int id, Discipline discipline)
+        {
+            IHttpActionResult ret = null;
+
+            if (id == 0 || discipline is null)
+            {
+                ret = NotFound();
+            }
+            else
+            {
+                using (MySqlConnection con = new MySqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    try
+                    {
+                        using (MySqlCommand command = new MySqlCommand(
+                            "UPDATE  tfb8.discipline set disciplinename =  @DisciplineName, professorName = @ProfessorName where disciplineid = @DisciplineId", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("DisciplineName", discipline.DisciplineName));
+                            command.Parameters.Add(new MySqlParameter("ProfessorName", discipline.ProfessorName));
+                            command.Parameters.Add(new MySqlParameter("DisciplineId", id));
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    catch
+                    {
+                        ret = NotFound();
+                    }
+                    ret = Ok(discipline);
+                }
+
+            }
+
+            return ret;
         }
     }
 }
