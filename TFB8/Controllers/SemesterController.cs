@@ -29,7 +29,7 @@ namespace TFB8.Controllers
                     "select s.semesterid, s.name, s.startdate, s.enddate, GROUP_CONCAT(d.disciplineName) as disciplines " +
                      "from tfb8.semester as s " +
                         "left join tfb8.semesterdisciplines sd on sd.semesterid = s.semesterid " +
-                        "left join tfb8.discipline d on d.disciplineid = sd.disciplineid", con))
+                        "left join tfb8.discipline d on d.disciplineid = sd.disciplineid group by s.semesterid", con))
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -39,7 +39,11 @@ namespace TFB8.Controllers
                         DateTime startDate = (DateTime)reader["StartDate"];
                         DateTime endDate = (DateTime)reader["EndDate"];
                         string name = (string)reader["Name"];
-                        string disciplines = (string)reader["Disciplines"];
+                        string disciplines = "";
+                        if (reader["Disciplines"] != null && reader["Disciplines"] != DBNull.Value)
+                        {
+                            disciplines = (string)reader["Disciplines"];
+                        }
                         semester.SemesterId = semesterId;
                         semester.StartDate = startDate;
                         semester.Name = name;
@@ -63,5 +67,59 @@ namespace TFB8.Controllers
 
             return result;
         }
+
+
+        // POST api/<controller>
+        [HttpPost()]
+        public IHttpActionResult Post(Semester semester)
+        {
+            IHttpActionResult result = null;
+
+            if (semester is null)
+            {
+                result = NotFound();
+            }
+            else
+            {
+                var disciplines = semester.DisciplinesAsString
+                    .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                using (MySqlConnection con = new MySqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    try
+                    {
+                        using (MySqlCommand command = new MySqlCommand(
+                            "INSERT into tfb8.semester values (default, @Name, @StartDate, @EndDate)", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("Name", semester.Name));
+                            command.Parameters.Add(new MySqlParameter("StartDate", semester.StartDate));
+                            command.Parameters.Add(new MySqlParameter("EndDate", semester.EndDate));
+                            command.ExecuteNonQuery();
+                            var lastId = command.LastInsertedId;
+
+                            foreach (string discipline in disciplines)
+                            {
+                                using (MySqlCommand com = new MySqlCommand(
+                                    "INSERT into tfb8.semesterdisciplines values (@SemesterId, (Select disciplineid from tfb8.discipline where UPPER(disciplinename) = @Discipline))", con))
+                                {
+                                    com.Parameters.Add(new MySqlParameter("SemesterId", lastId));
+                                    com.Parameters.Add(new MySqlParameter("Discipline", discipline));
+                                    com.ExecuteNonQuery();
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        result = NotFound();
+                    }
+                }
+                result = Ok(semester);
+            }
+
+            return result;
+        }
+        
     }
 }

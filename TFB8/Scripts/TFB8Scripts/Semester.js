@@ -1,14 +1,81 @@
 ﻿$(document).ready(function () {
     semestersList();
+    loadDisciplinesDropdown();
 });
+
+
 
 var Semester = {
     SemesterId: 0,
     StartDate: "",
     EndDate: "",
+    Name : "",
     DisciplinesAsString: ""
 }
 
+
+function loadDisciplinesDropdown() {
+    // Call Web API to get a list of Semesters
+    $.ajax({
+        url: '/api/Discipline/',
+        type: 'GET',
+        dataType: 'json',
+        success: function (result) {
+            $.each(result, function (i) {
+                $('#disciplinesDropdawn').append($('<option></option>').val(result[i].DisciplineId).html(result[i].DisciplineName));
+            });
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+
+function updateDisciplinesDropdown(Semester) {
+    var myList = document.getElementById("disciplinesDropdawn")
+    var currentValue = document.getElementById("DisciplinesAsString").value;
+    document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
+}
+
+
+
+
+
+
+
+function semesterAdd(semester) {
+    // Call Web API to add a new Semester
+    $.ajax({
+        url: "/api/Semester",
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(semester),
+        success: function (semester) {
+            semesterAddSuccess(semester);
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+
+function semesterAddSuccess(Semester) {
+    var row = document.getElementsByTagName('tbody')[0];
+    row.parentNode.removeChild(row);
+
+    semestersList();
+    formClear();
+}
+
+function deleteRow() {
+    row.parentNode.removeChild(row);
+};
+
+// Clear form fields
+function formClear() {
+    $("#semestername").val("");
+    $("#professorname").val("");
+}
 
 function semestersList() {
     // Call Web API to get a list of Semesters
@@ -37,7 +104,7 @@ function semesterListSuccess(semesters) {
 
 // Add Semester row to <table>
 function semesterAddRow(semester) {
-    if ($("#semesterTable semester").length == 0) {
+    if ($("#semesterTable tbody").length == 0) {
         $("#semesterTable").append("<tbody></tbody>");
     }
 
@@ -74,6 +141,10 @@ function semesterBuildTableRow(semester) {
 
 
     return result;
+}
+
+function addClick() {
+    formClear();
 }
 
 

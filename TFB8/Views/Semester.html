@@ -50,12 +50,12 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="semestername">
+                            <label for="name">
                                 Semester Name
                             </label>
                             <input type="text"
                                    class="form-control"
-                                   id="semestername" />
+                                   id="name" />
                         </div>
                         <div class="form-group">
                             <label for="startdate">
@@ -74,12 +74,12 @@
                                    id="enddate" />
                         </div>
                         <div class="form-group">
-                            <label for="disciplinesAsString">
-                                Disciplines
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="disciplinesAsString" />
+                            <label for="DisciplinesAsString">Choose a discipline:</label>
+
+                            <select onchange="updateDisciplinesDropdown()" id="disciplinesDropdawn">
+
+                            </select>
+                            <p>Choosen disciplines: <input readonly="readonly" type="text" id="DisciplinesAsString"/></p>
                         </div>
                     </div>
                     <div class="card-footer">
