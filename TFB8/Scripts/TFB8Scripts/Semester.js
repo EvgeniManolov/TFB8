@@ -9,7 +9,7 @@ var Semester = {
     StartDate: "",
     EndDate: "",
     Name: "",
-    DisciplinesIds: ""
+    Disciplines: []
 }
 
 
@@ -20,7 +20,14 @@ function updateClick() {
     semester.StartDate = $("#startdate").val();
     semester.EndDate = $("#enddate").val();
     semester.Name = $("#name").val();
-    semester.DisciplinesIds = $('select#disciplinesDropdawn').val();
+    semester.Disciplines = [];
+
+    var disciplinesIds = $('select#disciplinesDropdawn').val();
+
+    for (var i = 0; i < disciplinesIds.length; i++) {
+        var discipline = { DisciplineId: disciplinesIds[i] };
+        semester.Disciplines.push(discipline);
+    }
 
 
     if ($("#updateButton").text().trim() == "Add") {
@@ -95,8 +102,34 @@ function deleteRow() {
 
 // Clear form fields
 function formClear() {
-    $("#semestername").val("");
-    $("#professorname").val("");
+    $("#name").val("");
+    $("#startdate").val("");
+    $("#enddate").val("");
+    $('#disciplinesDropdawn option').prop('selected', false);
+}
+
+function success(data) {
+    alert(data);
+}
+function error(data) {
+    alert(data);
+}
+
+function semesterDelete(ctl) {
+    var id = $(ctl).data("id");
+
+    // Call Web API to delete a  discipline
+    $.ajax({
+        url: "/api/Semester/" + id,
+        type: 'DELETE',
+        success: function (responseMessage) {
+            success(responseMessage)
+            $(ctl).parents("tr").remove();
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
 }
 
 function semestersList() {
@@ -175,8 +208,8 @@ function handleException(request, message, error) {
     var msg = "";
 
     msg += "Code: " + request.status + "\n";
-    msg += "Text: " + request.statusText + "\n";
-    if (request.responseJSON != null) {
+    msg += "Text: " + request.responseText + "\n";
+    if (request.responseJSON != null && request.responseJSON.Message !== undefined) {
         msg += "Message" + request.responseJSON.Message + "\n";
     }
 

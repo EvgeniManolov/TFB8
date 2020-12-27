@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-
-namespace TFB8
+﻿namespace TFB8
 {
+    using System.Web.Http;
     using Interfaces;
     using Services;
-    using System.Web.Services.Description;
     using Unity;
 
     public static class WebApiConfig
@@ -17,10 +12,9 @@ namespace TFB8
             // Web API configuration and services
             var container = new Unity.UnityContainer();
             container.RegisterType(typeof(IDisciplineService), typeof(DisciplineService));
+            container.RegisterType(typeof(ISemesterService), typeof(SemesterService));
             config.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
-            //config.DependencyResolver.BeginScope();
-            //config.DependencyResolver.GetService(typeof(DisciplineService));
-            //config.Services.Add(typeof(IDisciplineService), new DisciplineService());
+           
             // Web API routes
             config.MapHttpAttributeRoutes();
 

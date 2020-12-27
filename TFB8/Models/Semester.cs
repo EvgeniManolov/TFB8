@@ -16,8 +16,6 @@ namespace TFB8.Models
 
         public string DisciplinesAsString { get; set; }
 
-        public int DisciplineId { get; set; }
-
         public List<Discipline> Disciplines { get; set; }
     }
 }
