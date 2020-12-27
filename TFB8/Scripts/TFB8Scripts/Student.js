@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     studentsList();
+    loadSemestersDropdown();
 });
 
 var Student = {
@@ -7,76 +8,79 @@ var Student = {
     Name: "",
     Surname: "",
     DateOfBirth: "",
+    Semesters: []
 }
 
-//function updateClick() {
-//    // Build Discipline object from inputs
-//    Student = new Object();
-//    Discipline.DisciplineId = $("#disciplineid").val();
-//    Discipline.DisciplineName = $("#disciplinename").val();
-//    Discipline.ProfessorName = $("#professorname").val();
+function updateClick() {
+    // Build student object from inputs
+    student = new Object();
+    student.StudentId = $("#studentid").val();
+    student.Name = $("#name").val();
+    student.Surname = $("#surname").val();
+    student.DateOfBirth = $("#dateofbirth").val();
+    student.Semesters = [];
 
-//    if ($("#updateButton").text().trim() == "Add") {
-//        disciplineAdd(Discipline);
-//    }
-//    else {
-//        disciplineUpdate(Discipline);
-//    }
-//}
+    var semestersIds = $('select#semestersDropdown').val();
 
-//function disciplineUpdate(discipline) {
-//    var url = "/api/Discipline/" + discipline.DisciplineId;
-
-//    // Call Web API to update discipline
-//    $.ajax({
-//        url: url,
-//        type: 'PUT',
-//        contentType: "application/json;charset=utf-8",
-//        data: JSON.stringify(discipline),
-//        success: function (discipline) {
-//            disciplineUpdateSuccess(discipline);
-//        },
-//        error: function (request, message, error) {
-//            handleException(request, message, error);
-//        }
-//    });
-//}
-
-//function disciplineUpdateSuccess(discipline) {
-//    var row = document.getElementsByTagName('tbody')[0];
-//    row.parentNode.removeChild(row);
-
-//    disciplinesList();
-//    formClear();
-//}
-
-//function disciplineAdd(discipline) {
-
-//    if (discipline.DisciplineName === "") {
-//        error("Discipline name is requered!")
-//    } else if (discipline.ProfessorName === "") {
-//        error("Professor name is requered!")
-//    }
-
-//    else {
+    for (var i = 0; i < semestersIds.length; i++) {
+        var semester = { SemesterId: semestersIds[i] };
+        student.Semesters.push(semester);
+    }
 
 
-//        // Call Web API to add a new discipline
-//        $.ajax({
-//            url: "/api/Discipline",
-//            type: 'POST',
-//            contentType: "application/json;charset=utf-8",
-//            data: JSON.stringify(discipline),
-//            success: function (discipline) {
-//                disciplineAddSuccess(discipline);
-//                success("Successfully created discipine");
-//            },
-//            error: function (request, message, error) {
-//                handleException(request, message, error);
-//            }
-//        })
-//    };
-//}
+    if ($("#updateButton").text().trim() == "Add") {
+        studentAdd(student);
+    }
+    else {
+        studentUpdate(student);
+    }
+}
+
+
+function loadSemestersDropdown() {
+    // Call Web API to get a list of Semesters
+    $.ajax({
+        url: '/api/Semester/',
+        type: 'GET',
+        dataType: 'json',
+        success: function (result) {
+            $.each(result, function (i) {
+                $('#semestersDropdown').append($('<option></option>').val(result[i].SemesterId).html(result[i].Name));
+            });
+            $('option').mousedown(function (e) {
+                e.preventDefault();
+                $(this).prop('selected', !$(this).prop('selected'));
+                return false;
+            });
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+
+function studentAdd(student) {
+    if (student.Name === "") {
+        error("Name is requered!")
+    } else if (student.Surname === "") {
+        error("Surname name is requered!")
+    } else {
+        // Call Web API to add a new Student
+        $.ajax({
+            url: "/api/Student",
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(student),
+            success: function (student) {
+                studentAddSuccess(student);
+            },
+            error: function (request, message, error) {
+                handleException(request, message, error);
+            }
+        });
+    }
+}
+
 function success(data) {
     alert(data);
 }
@@ -84,56 +88,27 @@ function error(data) {
     alert(data);
 }
 
-//function disciplineAddSuccess(discipline) {
-//    var row = document.getElementsByTagName('tbody')[0];
-//    row.parentNode.removeChild(row);
+function studentAddSuccess(student) {
+    var row = document.getElementsByTagName('tbody')[0];
+    row.parentNode.removeChild(row);
 
-//    disciplinesList();
-//    formClear();
-//}
-
-//function deleteRow() {
-//    row.parentNode.removeChild(row);
-//};
-
-//// Clear form fields
-//function formClear() {
-//    $("#disciplinename").val("");
-//    $("#professorname").val("");
-//}
+    studentsList();
+    formClear();
+}
 
 
-//function disciplineGet(ctl) {
-//    // Get discipline id from data- attribute
-//    var id = $(ctl).data("id");
 
-//    // Store discipline id in hidden field
-//    $("#disciplineid").val(id);
+// Clear form fields
+function formClear() {
+    $("#name").val("");
+    $("#surname").val("");
+    $("#dateofbirth").val("");
+    $('#semestersDropdown option').prop('selected', false);
+}
 
-//    // Call Web API to get a discipline
-//    $.ajax({
-//        url: "/api/Discipline/" + id,
-//        type: 'GET',
-//        dataType: 'json',
-//        success: function (discipline) {
-//            disciplineToFields(discipline);
-
-//            // Change Update Button Text
-//            $("#updateButton").text("Update");
-//        },
-//        error: function (request, message, error) {
-//            handleException(request, message, error);
-//        }
-//    });
-//}
-
-//function disciplineToFields(discipline) {
-//    $("#disciplinename").val(discipline.DisciplineName);
-//    $("#professorname").val(discipline.ProfessorName);
-//}
 
 function studentsList() {
-    // Call Web API to get a list of Disciplines
+    // Call Web API to get a list of Students
     $.ajax({
         url: '/api/Student/',
         type: 'GET',
@@ -147,17 +122,17 @@ function studentsList() {
     });
 }
 
-// Display all Disciplines returned from Web API call
+// Display all Students returned from Web API call
 function studentListSuccess(students) {
     // Iterate over the collection of data
     $.each(students,
         function (index, student) {
-            // Add a row to the Discipline table
+            // Add a row to the Student table
             studentAddRow(student);
         });
 }
 
-// Add Discipline row to <table>
+// Add Student row to <table>
 function studentAddRow(student) {
     if ($("#studentTable tbody").length == 0) {
         $("#studentTable").append("<tbody></tbody>");
@@ -182,7 +157,16 @@ function studentBuildTableRow(student) {
         "<td>" + student.Name + "</td>" +
         "<td>" + student.Surname + "</td>" +
         "<td>" + student.DateOfBirth + "</td>" +
-        "<td>" + "Marks" + "</td>" +
+        "<td>" + student.CurrentSemester.Name + "</td>" +
+        "<td>" +
+        "<button type='button' " +
+        "onclick='fillMarks(this);' " +
+        "class='btn btn-default' " +
+        "data-semester-id='" + student.CurrentSemester.SemesterId + "'" +
+        " data-id='" + student.StudentId + "'>" +
+        "<i class='fa fa-address-book'></i>" +
+        "</button>" +
+        "</td>" +
         "<td>" +
         "<button type='button' " +
         "onclick='studentDelete(this);' " +
@@ -200,23 +184,6 @@ function studentBuildTableRow(student) {
 
 function addClick() {
     formClear();
-}
-
-function disciplineDelete(ctl) {
-    var id = $(ctl).data("id");
-
-    // Call Web API to delete a  discipline
-    $.ajax({
-        url: "/api/Discipline/" + id,
-        type: 'DELETE',
-        success: function (discipline) {
-            success("Successfully deleted discipline!")
-            $(ctl).parents("tr").remove();
-        },
-        error: function (request, message, error) {
-            handleException(request, message, error);
-        }
-    });
 }
 
 // Handle exceptions from AJAX calls

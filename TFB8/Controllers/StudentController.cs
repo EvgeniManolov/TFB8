@@ -6,57 +6,74 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TFB8.Interfaces;
 using TFB8.Models;
+using TFB8.Services;
 
 namespace TFB8.Controllers
 {
     public class StudentController : ApiController
     {
-        string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+        IStudentService studentService = new StudentService();
 
+        public StudentController(IStudentService studentService)
+        {
+            this.studentService = studentService;
+        }
 
         // GET api/<controller>
         [HttpGet()]
         public IHttpActionResult Get()
         {
-            IHttpActionResult result = null;
-            List<Student> list = new List<Student>();
+            IHttpActionResult res = null;
 
-            using (MySqlConnection con = new MySqlConnection(connectionString))
+            List<Student> students = new List<Student>();
+
+            try
             {
-                con.Open();
-
-                using (MySqlCommand command = new MySqlCommand("SELECT studentId, name, surname, dateofbirth FROM tfb8.student", con))
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var student = new Student();
-                        int studentId = (int)reader["studentId"];
-                        string name = reader["name"] as string;
-                        string surname = reader["surname"] as string;
-                        DateTime dateofbirth = (DateTime)reader["dateofbirth"];
-                        student.StudentId = studentId;
-                        student.Name = name;
-                        student.Surname = surname;
-                        student.DateOfBirth = dateofbirth;
-                        list.Add(student);
-                    }
-                }
-
-                con.Close();
+                students = this.studentService.GetAllStudents().ToList();
+                res = Ok(students);
+            }
+            catch (Exception e)
+            {
+                res = NotFound();
             }
 
-            if (list.Count > 0)
+            return res;
+        }
+
+        // POST api/<controller>
+        [HttpPost()]
+        public IHttpActionResult Post(Student student)
+        {
+            IHttpActionResult res = null;
+
+            if (student is null)
             {
-                result = Ok(list);
+                res = BadRequest();
+            }
+            else if (string.IsNullOrEmpty(student.Name))
+            {
+                res = Content(HttpStatusCode.BadRequest, "Student name is requered!");
+            }
+            else if (string.IsNullOrEmpty(student.Surname))
+            {
+                res = Content(HttpStatusCode.BadRequest, "Student surname is requered!");
             }
             else
             {
-                result = NotFound();
+                try
+                {
+                    this.studentService.CreateStudent(student);
+                    res = Content(HttpStatusCode.Created, "Successfully created student!");
+                }
+                catch
+                {
+                    res = NotFound();
+                }
             }
 
-            return result;
+            return res;
         }
     }
 }

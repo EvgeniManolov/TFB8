@@ -13,6 +13,7 @@
             var container = new Unity.UnityContainer();
             container.RegisterType(typeof(IDisciplineService), typeof(DisciplineService));
             container.RegisterType(typeof(ISemesterService), typeof(SemesterService));
+            container.RegisterType(typeof(IStudentService), typeof(StudentService));
             config.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
            
             // Web API routes

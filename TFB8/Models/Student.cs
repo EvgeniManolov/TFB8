@@ -15,6 +15,8 @@ namespace TFB8.Models
 
         public DateTime DateOfBirth { get; set; }
 
+        public Semester CurrentSemester { get; set; }
+
         public List<Semester> Semesters { get; set; }
     }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace TFB8.Services
+﻿namespace TFB8.Services
 {
+    using System;
+    using System.Collections.Generic;
     using Interfaces;
     using MySql.Data.MySqlClient;
     using System.Configuration;
