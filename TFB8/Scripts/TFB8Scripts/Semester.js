@@ -1,26 +1,17 @@
 ﻿$(document).ready(function () {
     semestersList();
     loadDisciplinesDropdown();
-    $('option').mousedown(function (e) {
-        e.preventDefault();
-        $(this).prop('selected', !$(this).prop('selected'));
-        return false;
-    });
+
 });
 
 var Semester = {
     SemesterId: 0,
     StartDate: "",
     EndDate: "",
-    Name : "",
-    DisciplinesAsString: ""
+    Name: "",
+    DisciplinesIds: ""
 }
 
-$('option').mousedown(function (e) {
-    e.preventDefault();
-    $(this).prop('selected', !$(this).prop('selected'));
-    return false;
-});
 
 function updateClick() {
     // Build semesters object from inputs
@@ -29,11 +20,11 @@ function updateClick() {
     semester.StartDate = $("#startdate").val();
     semester.EndDate = $("#enddate").val();
     semester.Name = $("#name").val();
-    semester.DisciplinesAsString = $("#disciplinesAsString").val();
+    semester.DisciplinesIds = $('select#disciplinesDropdawn').val();
 
 
     if ($("#updateButton").text().trim() == "Add") {
-        semesterAddAdd(semester);
+        semesterAdd(semester);
     }
     else {
         semesterUpdate(semester);
@@ -50,6 +41,11 @@ function loadDisciplinesDropdown() {
             $.each(result, function (i) {
                 $('#disciplinesDropdawn').append($('<option></option>').val(result[i].DisciplineId).html(result[i].DisciplineName));
             });
+            $('option').mousedown(function (e) {
+                e.preventDefault();
+                $(this).prop('selected', !$(this).prop('selected'));
+                return false;
+            });
         },
         error: function (request, message, error) {
             handleException(request, message, error);
@@ -57,20 +53,16 @@ function loadDisciplinesDropdown() {
     });
 }
 
-function updateDisciplinesDropdown(Semester) {
-    $('option').mousedown(function (e) {
-        e.preventDefault();
-        $(this).prop('selected', !$(this).prop('selected'));
-        return false;
-    });
-    var myList = document.getElementById("disciplinesDropdawn")
-    var currentValue = document.getElementById("DisciplinesAsString").value;
-    if (currentValue !== "") {
-        document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
-    } else {
-        document.getElementById("DisciplinesAsString").value = myList.options[myList.selectedIndex].text
-    }
-}
+//function updateDisciplinesDropdown(Semester) {
+//    var myList = document.getElementById("disciplinesDropdawn")
+//    var currentValue = document.getElementById("DisciplinesAsString").value;
+//    if (currentValue !== "") {
+//        document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
+//    } else {
+
+//        document.getElementById("DisciplinesAsString").value = myList.options[myList.selectedIndex].text
+//    }
+//}
 
 
 function semesterAdd(semester) {
