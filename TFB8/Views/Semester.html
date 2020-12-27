@@ -9,94 +9,94 @@
     <script src="../Scripts/TFB8Scripts/Semester.js" type="text/javascript"></script>
 </head>
 <body>
-    <input type="hidden" id="semesterid" value="0" />
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <h2>Semesters</h2>
-            </div>
+<input type="hidden" id="semesterid" value="0" />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>Semesters</h2>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <table id="semesterTable"
-                       class="table table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Edit</th>
-                            <th>Name</th>
-                            <th>StartDate</th>
-                            <th>EndDate</th>
-                            <th>Disciplines</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <table id="semesterTable"
+                   class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Edit</th>
+                    <th>Name</th>
+                    <th>StartDate</th>
+                    <th>EndDate</th>
+                    <th>Disciplines</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+            </table>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <button type="button" id="addButton"
-                        class="btn btn-primary"
-                        onclick="addClick();">
-                    Add Semester
-                </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <button type="button" id="addButton"
+                    class="btn btn-primary"
+                    onclick="addClick();">
+                Add Semester
+            </button>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        Semester Information
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    Semester Information
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">
+                            Semester Name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="name" />
                     </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">
-                                Semester Name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="name" />
-                        </div>
-                        <div class="form-group">
-                            <label for="startdate">
-                                StartDate
-                            </label>
-                            <input type="date"
-                                   class="form-control"
-                                   id="startdate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="enddate">
-                                Enddate
-                            </label>
-                            <input type="date"
-                                   class="form-control"
-                                   id="enddate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="DisciplinesAsString">Choose a discipline:</label>
-
-                            <select onchange="updateDisciplinesDropdown()" id="disciplinesDropdawn">
-
-                            </select>
-                            <p>Choosen disciplines: <input readonly="readonly" type="text" id="DisciplinesAsString"/></p>
-                        </div>
+                    <div class="form-group">
+                        <label for="startdate">
+                            StartDate
+                        </label>
+                        <input type="date"
+                               class="form-control"
+                               id="startdate" />
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <button type="button" id="updateButton"
-                                        class="btn btn-primary"
-                                        onclick="updateClick();">
-                                    Add
-                                </button>
-                            </div>
+                    <div class="form-group">
+                        <label for="enddate">
+                            Enddate
+                        </label>
+                        <input type="date"
+                               class="form-control"
+                               id="enddate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="DisciplinesAsString">Choose a discipline:</label>
+
+                        <select multiple="multiple" onchange="updateDisciplinesDropdown()" id="disciplinesDropdawn">
+
+                        </select>
+                        <p>Choosen disciplines: <input readonly="readonly" type="text" id="DisciplinesAsString"/></p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button type="button" id="updateButton"
+                                    class="btn btn-primary"
+                                    onclick="updateClick();">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
 

@@ -50,19 +50,37 @@ function disciplineUpdateSuccess(discipline) {
 }
 
 function disciplineAdd(discipline) {
-    // Call Web API to add a new discipline
-    $.ajax({
-        url: "/api/Discipline",
-        type: 'POST',
-        contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(discipline),
-        success: function (discipline) {
-            disciplineAddSuccess(discipline);
-        },
-        error: function (request, message, error) {
-            handleException(request, message, error);
-        }
-    });
+
+    if (discipline.DisciplineName === "") {
+        error("Discipline name is requered!")
+    } else if (discipline.ProfessorName === "") {
+        error("Professor name is requered!")
+    }
+
+    else {
+
+
+        // Call Web API to add a new discipline
+        $.ajax({
+            url: "/api/Discipline",
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(discipline),
+            success: function (discipline) {
+                disciplineAddSuccess(discipline);
+                success("Successfully created discipine");
+            },
+            error: function (request, message, error) {
+                handleException(request, message, error);
+            }
+        })
+    };
+}
+function success(data) {
+    alert(data);
+}
+function error(data) {
+    alert(data);
 }
 
 function disciplineAddSuccess(discipline) {
@@ -189,6 +207,7 @@ function disciplineDelete(ctl) {
         url: "/api/Discipline/" + id,
         type: 'DELETE',
         success: function (discipline) {
+            success("Successfully deleted discipline!")
             $(ctl).parents("tr").remove();
         },
         error: function (request, message, error) {
@@ -202,7 +221,7 @@ function handleException(request, message, error) {
     var msg = "";
 
     msg += "Code: " + request.status + "\n";
-    msg += "Text: " + request.statusText + "\n";
+    msg += "Text: " + request.responseText + "\n";
     if (request.responseJSON != null) {
         msg += "Message" + request.responseJSON.Message + "\n";
     }

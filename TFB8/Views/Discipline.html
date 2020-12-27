@@ -9,76 +9,77 @@
     <script src="../Scripts/TFB8Scripts/Discipline.js" type="text/javascript"></script>
 </head>
 <body>
-    <input type="hidden" id="disciplineid" value="0" />
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <h2>Disciplines</h2>
-            </div>
+<div id="msg"></div>
+<input type="hidden" id="disciplineid" value="0"/>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>Disciplines</h2>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <table id="disciplineTable"
-                       class="table table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Edit</th>
-                            <th>Discipline name</th>
-                            <th>Professor name</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <table id="disciplineTable"
+                   class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Edit</th>
+                    <th>Discipline name</th>
+                    <th>Professor name</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+            </table>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <button type="button" id="addButton"
-                        class="btn btn-primary"
-                        onclick="addClick();">
-                    Add Discipline
-                </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <button type="button" id="addButton"
+                    class="btn btn-primary"
+                    onclick="addClick();">
+                Add Discipline
+            </button>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        Discipline Information
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    Discipline Information
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="disciplinename">
+                            Discipline Name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="disciplinename"/>
                     </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="disciplinename">
-                                Discipline Name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="disciplinename" />
-                        </div>
-                        <div class="form-group">
-                            <label for="professorname">
-                                Professor name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="professorname" />
-                        </div>
+                    <div class="form-group">
+                        <label for="professorname">
+                            Professor name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="professorname"/>
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <button type="button" id="updateButton"
-                                        class="btn btn-primary"
-                                        onclick="updateClick();">
-                                    Add
-                                </button>
-                            </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button type="button" id="updateButton"
+                                    class="btn btn-primary"
+                                    onclick="updateClick();">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
 

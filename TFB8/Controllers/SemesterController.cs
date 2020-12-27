@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,8 +12,7 @@ namespace TFB8.Controllers
 {
     public class SemesterController : ApiController
     {
-        string connectionString =
-           @"server=localhost;userid=emanolov;password=test;database=tfb8";
+        string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
 
         // GET api/<controller>
         [HttpGet()]

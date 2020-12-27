@@ -3,13 +3,16 @@
     using MySql.Data.MySqlClient;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.Net;
+    using System.Net.Http;
     using System.Web.Http;
     using TFB8.Models;
 
     public class DisciplineController : ApiController
     {
-        string connectionString =
-            @"server=localhost;userid=emanolov;password=test;database=tfb8";
+        string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+
 
         // GET api/<controller>
         [HttpGet()]
@@ -17,7 +20,7 @@
         {
             IHttpActionResult result = null;
             List<Discipline> list = new List<Discipline>();
-
+           
             using (MySqlConnection con = new MySqlConnection(connectionString))
             {
                 con.Open();
@@ -86,7 +89,7 @@
 
             if (discipline == null)
             {
-                result = NotFound();
+                result = Content(HttpStatusCode.NotFound, "Missing discipline with this id");
             }
             else
             {
@@ -103,9 +106,13 @@
         {
             IHttpActionResult result = null;
 
-            if (discipline is null)
+            if (string.IsNullOrEmpty(discipline.DisciplineName))
             {
-                result = NotFound();
+                result = Content(HttpStatusCode.BadRequest, "Discipline name is requered!");
+            }
+            else if (string.IsNullOrEmpty(discipline.ProfessorName))
+            {
+                result = Content(HttpStatusCode.BadRequest, "Professor name is requered!");
             }
             else
             {
@@ -123,9 +130,8 @@
                             command.ExecuteNonQuery();
                         }
 
-                        result = Created<Discipline>(Request.RequestUri +
-                                                  discipline.DisciplineId.ToString(),
-                            discipline);
+
+                        result = Content(HttpStatusCode.Created, "Successfully created discipline!");
                     }
                     catch
                     {
@@ -141,8 +147,11 @@
         public IHttpActionResult Put(int id, Discipline discipline)
         {
             IHttpActionResult result = null;
-
-            if (id == 0 || discipline is null)
+            if (string.IsNullOrEmpty(discipline.DisciplineName))
+            {
+                result = Content(HttpStatusCode.BadRequest, "Discipline name is requered!");
+            }
+            else if (id == 0 || discipline is null)
             {
                 result = NotFound();
             }

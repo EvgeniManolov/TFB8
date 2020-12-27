@@ -1,9 +1,12 @@
 ﻿$(document).ready(function () {
     semestersList();
     loadDisciplinesDropdown();
+    $('option').mousedown(function (e) {
+        e.preventDefault();
+        $(this).prop('selected', !$(this).prop('selected'));
+        return false;
+    });
 });
-
-
 
 var Semester = {
     SemesterId: 0,
@@ -13,6 +16,29 @@ var Semester = {
     DisciplinesAsString: ""
 }
 
+$('option').mousedown(function (e) {
+    e.preventDefault();
+    $(this).prop('selected', !$(this).prop('selected'));
+    return false;
+});
+
+function updateClick() {
+    // Build semesters object from inputs
+    semester = new Object();
+    semester.SemesterId = $("#semesterid").val();
+    semester.StartDate = $("#startdate").val();
+    semester.EndDate = $("#enddate").val();
+    semester.Name = $("#name").val();
+    semester.DisciplinesAsString = $("#disciplinesAsString").val();
+
+
+    if ($("#updateButton").text().trim() == "Add") {
+        semesterAddAdd(semester);
+    }
+    else {
+        semesterUpdate(semester);
+    }
+}
 
 function loadDisciplinesDropdown() {
     // Call Web API to get a list of Semesters
@@ -32,15 +58,19 @@ function loadDisciplinesDropdown() {
 }
 
 function updateDisciplinesDropdown(Semester) {
+    $('option').mousedown(function (e) {
+        e.preventDefault();
+        $(this).prop('selected', !$(this).prop('selected'));
+        return false;
+    });
     var myList = document.getElementById("disciplinesDropdawn")
     var currentValue = document.getElementById("DisciplinesAsString").value;
-    document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
+    if (currentValue !== "") {
+        document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
+    } else {
+        document.getElementById("DisciplinesAsString").value = myList.options[myList.selectedIndex].text
+    }
 }
-
-
-
-
-
 
 
 function semesterAdd(semester) {
