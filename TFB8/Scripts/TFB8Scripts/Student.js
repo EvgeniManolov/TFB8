@@ -97,7 +97,6 @@ function studentAddSuccess(student) {
 }
 
 
-
 // Clear form fields
 function formClear() {
     $("#name").val("");
@@ -107,8 +106,9 @@ function formClear() {
 }
 
 
+
 function studentsList() {
-    // Call Web API to get a list of Students
+    // Call Web API to get a list of Disciplines
     $.ajax({
         url: '/api/Student/',
         type: 'GET',
@@ -122,17 +122,17 @@ function studentsList() {
     });
 }
 
-// Display all Students returned from Web API call
+// Display all Disciplines returned from Web API call
 function studentListSuccess(students) {
     // Iterate over the collection of data
     $.each(students,
         function (index, student) {
-            // Add a row to the Student table
+            // Add a row to the Discipline table
             studentAddRow(student);
         });
 }
 
-// Add Student row to <table>
+// Add Discipline row to <table>
 function studentAddRow(student) {
     if ($("#studentTable tbody").length == 0) {
         $("#studentTable").append("<tbody></tbody>");

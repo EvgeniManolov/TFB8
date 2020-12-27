@@ -73,7 +73,6 @@ function loadDisciplinesDropdown() {
 
 
 function semesterAdd(semester) {
-
     // Call Web API to add a new Semester
     $.ajax({
         url: "/api/Semester",
@@ -215,4 +214,5 @@ function handleException(request, message, error) {
     }
 
     alert(msg);
+
 }
