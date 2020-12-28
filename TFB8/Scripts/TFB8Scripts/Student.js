@@ -59,6 +59,32 @@ function loadSemestersDropdown() {
     });
 }
 
+//function disciplineUpdate(discipline) {
+//    var url = "/api/Discipline/" + discipline.DisciplineId;
+
+//    // Call Web API to update discipline
+//    $.ajax({
+//        url: url,
+//        type: 'PUT',
+//        contentType: "application/json;charset=utf-8",
+//        data: JSON.stringify(discipline),
+//        success: function (discipline) {
+//            disciplineUpdateSuccess(discipline);
+//        },
+//        error: function (request, message, error) {
+//            handleException(request, message, error);
+//        }
+//    });
+//}
+
+//function disciplineUpdateSuccess(discipline) {
+//    var row = document.getElementsByTagName('tbody')[0];
+//    row.parentNode.removeChild(row);
+
+//    disciplinesList();
+//    formClear();
+//}
+
 function studentAdd(student) {
     if (student.Name === "") {
         error("Name is requered!")
@@ -96,6 +122,10 @@ function studentAddSuccess(student) {
     formClear();
 }
 
+//function deleteRow() {
+//    row.parentNode.removeChild(row);
+//};
+
 
 // Clear form fields
 function formClear() {
@@ -106,6 +136,34 @@ function formClear() {
 }
 
 
+//function disciplineGet(ctl) {
+//    // Get discipline id from data- attribute
+//    var id = $(ctl).data("id");
+
+//    // Store discipline id in hidden field
+//    $("#disciplineid").val(id);
+
+//    // Call Web API to get a discipline
+//    $.ajax({
+//        url: "/api/Discipline/" + id,
+//        type: 'GET',
+//        dataType: 'json',
+//        success: function (discipline) {
+//            disciplineToFields(discipline);
+
+//            // Change Update Button Text
+//            $("#updateButton").text("Update");
+//        },
+//        error: function (request, message, error) {
+//            handleException(request, message, error);
+//        }
+//    });
+//}
+
+//function disciplineToFields(discipline) {
+//    $("#disciplinename").val(discipline.DisciplineName);
+//    $("#professorname").val(discipline.ProfessorName);
+//}
 
 function studentsList() {
     // Call Web API to get a list of Disciplines
@@ -130,6 +188,10 @@ function studentListSuccess(students) {
             // Add a row to the Discipline table
             studentAddRow(student);
         });
+}
+
+function fillMarks() {
+    $('#showModal').modal('show');
 }
 
 // Add Discipline row to <table>
@@ -165,14 +227,6 @@ function studentBuildTableRow(student) {
         "data-semester-id='" + student.CurrentSemester.SemesterId + "'" +
         " data-id='" + student.StudentId + "'>" +
         "<i class='fa fa-address-book'></i>" +
-        "</button>" +
-        "</td>" +
-        "<td>" +
-        "<button type='button' " +
-        "onclick='studentDelete(this);' " +
-        "class='btn btn-default' " +
-        "data-id='" + student.StudentId + "'>" +
-        "<span class='fa fa-remove' />" +
         "</button>" +
         "</td>" +
         "</tr>";

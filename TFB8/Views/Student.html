@@ -17,90 +17,124 @@
         <a href="Semester.html">Semesters</a>
     </div>
     <input type="hidden" id="studentid" value="0" />
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <h2>Students</h2>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>Students</h2>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <table id="studentTable"
-                       class="table table-bordered table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Edit</th>
-                            <th>Name</th>
-                            <th>Surname</th>
-                            <th>DateOfBirth</th>
-                            <th>SemesterName</th>
-                            <th>Marks</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <table id="studentTable"
+                   class="table table-bordered table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Edit</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>DateOfBirth</th>
+                    <th>SemesterName</th>
+                    <th>Marks</th>
+                </tr>
+                </thead>
+            </table>
         </div>
-        <div class="row">
-            <div class="col-sm-6" ">
-                <button type="button" id="addButton"
-                        class="btn btn-primary"
-                        onclick="addClick();">
-                    Add Student
-                </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" ">
+            <button type="button" id="addButton"
+                    class="btn btn-primary"
+                    onclick="addClick();">
+                Add Student
+            </button>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-header">
-                        Student Information
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    Student Information
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">
+                            Name
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="name" />
                     </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">
-                                Name
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="name" />
-                        </div>
-                        <div class="form-group">
-                            <label for="surname">
-                                Surname
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="surname" />
-                        </div>
-                        <div class="form-group">
-                            <label for="dateofbirth">
-                                DateOfBirth
-                            </label>
-                            <input type="date"
-                                   class="form-control"
-                                   id="dateofbirth" />
-                        </div>
-                        <div class="form-group">
-                            <label for="semestersDropdown">Choose semesters:</label>
-                            <select multiple="multiple" id="semestersDropdown">
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="surname">
+                            Surname
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="surname" />
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <button type="button" id="updateButton"
-                                        class="btn btn-primary"
-                                        onclick="updateClick();">
-                                    Add
-                                </button>
-                            </div>
+                    <div class="form-group">
+                        <label for="dateofbirth">
+                            DateOfBirth
+                        </label>
+                        <input type="date"
+                               class="form-control"
+                               id="dateofbirth" />
+                    </div>
+                    <div class="form-group">
+                        <label for="semestersDropdown">Choose semesters:</label>
+                        <select multiple="multiple" id="semestersDropdown">
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button type="button" id="updateButton"
+                                    class="btn btn-primary"
+                                    onclick="updateClick();">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Open modal for @fat</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Open modal for @getbootstrap</button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
 

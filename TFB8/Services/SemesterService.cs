@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using MySql.Data.MySqlClient;
     using System.Configuration;
+    using System.Linq;
 
     public class SemesterService : ISemesterService
     {
@@ -115,6 +116,69 @@
             }
 
             return semesters;
+        }
+
+        public Semester GetSemesterById(int id)
+        {
+            Semester semester = new Semester();
+            semester.Disciplines = new List<Discipline>();
+
+            using (MySqlConnection con = new MySqlConnection(connectionString))
+            {
+                con.Open();
+                string sqlCommand =
+                    "SELECT s.semesterid,  s.name, s.startdate, s.enddate, group_concat(sd.disciplineid) as disciplineIds"
+                     + " FROM tfb8.semester s"
+                    + " join tfb8.semesterdisciplines sd on sd.semesterid = s.semesterid"
+                    + " where s.semesterid = " + id
+                    + " group by s.semesterid";
+                using (MySqlCommand command = new MySqlCommand(sqlCommand, con))
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int semesterId = (int)reader["semesterId"];
+                        string semesterName = reader["name"] as string;
+                        DateTime startDate = (DateTime)reader["startdate"];
+                        DateTime endDate = (DateTime)reader["enddate"];
+                        semester.SemesterId = semesterId;
+                        semester.Name = semesterName;
+                        semester.StartDate = startDate;
+                        semester.EndDate = endDate;
+
+                        string disciplineIds = (string)reader["disciplineIds"];
+                        var disciplineIdsArray = disciplineIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+                        foreach (var disciplineId in disciplineIdsArray)
+                        {
+                            var discipline = new Discipline() { DisciplineId = int.Parse(disciplineId) };
+                            semester.Disciplines.Add(discipline);
+                        }
+                    }
+                }
+
+                con.Close();
+            }
+
+            return semester;
+        }
+
+        public void UpdateSemester(int id, Semester semester)
+        {
+            using (MySqlConnection con = new MySqlConnection(connectionString))
+            {
+                con.Open();
+
+                using (MySqlCommand command = new MySqlCommand(
+                    "UPDATE  tfb8.semester set name =  @SemesterName, startdate = @StartDate, enddate = @EndDate where semesterid = @SemesterId", con))
+                {
+                    command.Parameters.Add(new MySqlParameter("SemesterName", semester.Name));
+                    command.Parameters.Add(new MySqlParameter("StartDate", semester.StartDate));
+                    command.Parameters.Add(new MySqlParameter("EndDate", semester.StartDate));
+                    command.Parameters.Add(new MySqlParameter("SemesterId", id));
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

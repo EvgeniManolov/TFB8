@@ -74,6 +74,34 @@ namespace TFB8.Controllers
             return res;
         }
 
+        [HttpPut()]
+        public IHttpActionResult Put(int id, Semester semester)
+        {
+            IHttpActionResult res = null;
+            if (string.IsNullOrEmpty(semester.Name))
+            {
+                res = Content(HttpStatusCode.BadRequest, "Semester name is requered!");
+            }
+            else if (id == 0 || semester is null)
+            {
+                res = NotFound();
+            }
+            else
+            {
+                try
+                {
+                    this.semesterService.UpdateSemester(id, semester);
+                    res = Content(HttpStatusCode.OK, "Successfully updated semester!");
+                }
+                catch (Exception e)
+                {
+                    res = BadRequest();
+                }
+            }
+
+            return res;
+        }
+
         // DELETE api/<controller>/5
         [HttpDelete()]
         public IHttpActionResult Delete(int id)
@@ -95,6 +123,32 @@ namespace TFB8.Controllers
             else
             {
                 res = Content(HttpStatusCode.NotFound, "You try to delete semester that does not exist");
+            }
+
+            return res;
+        }
+
+        // GET api/<controller>/id
+        [HttpGet()]
+        public IHttpActionResult Get(int id)
+        {
+            IHttpActionResult res;
+            Semester semester = new Semester();
+            if (semester == null)
+            {
+                res = Content(HttpStatusCode.NotFound, "Missing semester with this id");
+            }
+            else
+            {
+                try
+                {
+                    semester = this.semesterService.GetSemesterById(id);
+                    res = Ok(semester);
+                }
+                catch (Exception e)
+                {
+                    res = BadRequest();
+                }
             }
 
             return res;

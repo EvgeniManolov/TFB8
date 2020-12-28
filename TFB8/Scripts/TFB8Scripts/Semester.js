@@ -38,6 +38,25 @@ function updateClick() {
     }
 }
 
+function semesterUpdate(semester) {
+    var url = "/api/Semester/" + semester.SemesterId;
+
+    // Call Web API to update semester
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(semester),
+        success: function (responseMessage) {
+            semesterUpdateSuccess();
+            success(responseMessage);
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+
 function loadDisciplinesDropdown() {
     // Call Web API to get a list of Semesters
     $.ajax({
@@ -60,16 +79,66 @@ function loadDisciplinesDropdown() {
     });
 }
 
-//function updateDisciplinesDropdown(Semester) {
-//    var myList = document.getElementById("disciplinesDropdawn")
-//    var currentValue = document.getElementById("DisciplinesAsString").value;
-//    if (currentValue !== "") {
-//        document.getElementById("DisciplinesAsString").value = currentValue + ", " + myList.options[myList.selectedIndex].text
-//    } else {
 
-//        document.getElementById("DisciplinesAsString").value = myList.options[myList.selectedIndex].text
-//    }
-//}
+function semesterGet(ctl) {
+    // Get semester id from data- attribute
+    var id = $(ctl).data("id");
+
+    // Store semester id in hidden field
+    $("#semesterid").val(id);
+
+    // Call Web API to get a semester
+    $.ajax({
+        url: "/api/Semester/" + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (semester) {
+            semesterToFields(semester);
+
+            // Change Update Button Text
+            $("#updateButton").text("Update");
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+
+function semesterToFields(semester) {
+    $("#name").val(semester.Name);
+    var startDate = createDate(semester.StartDate)
+    var enddate = createDate(semester.EndDate)
+    $("#startdate").val(startDate);
+    $("#enddate").val(enddate);
+    $('#disciplinesDropdawn option:selected').removeAttr('selected');
+    var options = document.getElementById('disciplinesDropdawn').options;
+
+    for (i = 0; i < options.length; i++) {
+        for (r = 0; r < semester.Disciplines.length; r++) {
+            var disciplineId = parseInt(semester.Disciplines[r].DisciplineId);
+            var optiondId = parseInt(options[i].value);
+            if (disciplineId === optiondId) {
+                $('#disciplinesDropdawn > option[value="' + optiondId + '"]').attr("selected", "selected")
+            }
+        }
+    }
+
+}
+
+function createDate(unformatedDate) {
+    var newDate = new Date(unformatedDate);
+    var day = newDate.getDate();
+    if (day < 10) {
+        day = "0" + day;
+    }
+    var year = newDate.getFullYear();
+    var month = parseInt(newDate.getMonth()) + 1;
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var date = year + "-" + month + "-" + day;
+    return date;
+}
 
 
 function semesterAdd(semester) {
