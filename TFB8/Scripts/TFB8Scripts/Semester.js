@@ -57,6 +57,15 @@ function semesterUpdate(semester) {
     });
 }
 
+
+function semesterUpdateSuccess() {
+    var row = document.getElementsByTagName('tbody')[0];
+    row.parentNode.removeChild(row);
+
+    semestersList();
+    formClear();
+}
+
 function loadDisciplinesDropdown() {
     // Call Web API to get a list of Semesters
     $.ajax({
@@ -272,6 +281,7 @@ function addClick() {
 }
 
 
+
 // Handle exceptions from AJAX calls
 function handleException(request, message, error) {
     var msg = "";
@@ -283,5 +293,4 @@ function handleException(request, message, error) {
     }
 
     alert(msg);
-
 }

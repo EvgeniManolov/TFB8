@@ -95,7 +95,7 @@ namespace TFB8.Controllers
                 }
                 catch (Exception e)
                 {
-                    res = BadRequest();
+                    res = BadRequest(e.Message);
                 }
             }
 

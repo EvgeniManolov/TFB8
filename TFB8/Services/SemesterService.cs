@@ -178,6 +178,69 @@
                     command.Parameters.Add(new MySqlParameter("SemesterId", id));
                     command.ExecuteNonQuery();
                 }
+
+                List<int> dbDisciplineIds = new List<int>();
+                using (MySqlCommand command = new MySqlCommand(
+                    "select disciplineid from tfb8.semesterdisciplines where semesterid = " + semester.SemesterId, con))
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int disciplineid = (int)reader["disciplineid"];
+                        dbDisciplineIds.Add(disciplineid);
+                    }
+                }
+
+                List<int> disciplinesIds = new List<int>();
+                foreach (var discipline in semester.Disciplines)
+                {
+                    if (!dbDisciplineIds.Contains(discipline.DisciplineId))
+                    {
+                        using (MySqlCommand command = new MySqlCommand(
+                            "INSERT into tfb8.semesterdisciplines values (@SemesterId, @DisciplineId, default)", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("SemesterId", id));
+                            command.Parameters.Add(new MySqlParameter("DisciplineId", discipline.DisciplineId));
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    disciplinesIds.Add(discipline.DisciplineId);
+                }
+
+                foreach (var dbDisciplineId in dbDisciplineIds)
+                {
+                    if (!disciplinesIds.Contains(dbDisciplineId))
+                    {
+                        //Delete
+                        //Проверка даи към съответната дисциплина няма оценки
+
+                        using (MySqlCommand command = new MySqlCommand(
+                            "select 1 from tfb8.scores s" +
+                            "           join tfb8.semesterdisciplines sd on sd.semesterdisciplinesid = s.semesterdisciplinesid" +
+                            "            where s.score is not null and sd.disciplineid = " + dbDisciplineId, con))
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                throw new Exception("Can not remove discipline because there are students score given on it!");
+                            }
+                        }
+
+                        using (MySqlCommand command = new MySqlCommand(
+                            "DELETE from tfb8.scores where semesterdisciplinesid in (select semesterdisciplinesid from tfb8.semesterdisciplines where disciplineid = @DisciplineId)", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("DisciplineId", dbDisciplineId));
+                            command.ExecuteNonQuery();
+                        }
+
+                        using (MySqlCommand command = new MySqlCommand(
+                            "DELETE from tfb8.semesterdisciplines where disciplineid = @DisciplineId", con))
+                        {
+                            command.Parameters.Add(new MySqlParameter("DisciplineId", dbDisciplineId));
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
             }
         }
     }
