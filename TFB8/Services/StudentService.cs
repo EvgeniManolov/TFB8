@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Linq;
     using Interfaces;
     using MySql.Data.MySqlClient;
     using TFB8.Models;
@@ -100,6 +101,52 @@
 
             return students;
 
+        }
+
+        public Student GetStudentById(int id)
+        {
+            Student student = new Student();
+            student.Semesters = new List<Semester>();
+
+            using (MySqlConnection con = new MySqlConnection(connectionString))
+            {
+                con.Open();
+                string sqlCommand =
+                    "SELECT  s.studentid,  s.name, s.surname, s.dateofbirth, group_concat(distinct (sd.semesterid)) as semesterids"
+                + " FROM tfb8.student s"
+                    + " join tfb8.scores sc on sc.studentid = s.studentid"
+                    + " join tfb8.semesterdisciplines sd on sd.semesterdisciplinesid = sc.semesterdisciplinesid"
+                    + " where s.studentid = " + id
+                    + " group by s.studentid; ";
+                using (MySqlCommand command = new MySqlCommand(sqlCommand, con))
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int studentId = (int)reader["studentid"];
+                        string studentname = reader["name"] as string;
+                        string surname = reader["surname"] as string;
+                        DateTime dateofbirth = (DateTime)reader["dateofbirth"];
+                        student.StudentId = studentId;
+                        student.Name = studentname;
+                        student.Surname = surname;
+                        student.DateOfBirth = dateofbirth;
+
+                        string semesterIds = (string)reader["semesterids"];
+                        var semesterIdsArray = semesterIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+                        foreach (var semesterId in semesterIdsArray)
+                        {
+                            var semester = new Semester() { SemesterId = int.Parse(semesterId) };
+                            student.Semesters.Add(semester);
+                        }
+                    }
+                }
+
+                con.Close();
+            }
+
+            return student;
         }
     }
 }

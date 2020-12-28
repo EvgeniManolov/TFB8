@@ -11,6 +11,7 @@
     {
         string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
 
+
         public void CreateDiscipline(Discipline discipline)
         {
             using (MySqlConnection con = new MySqlConnection(connectionString))

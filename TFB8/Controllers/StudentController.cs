@@ -75,5 +75,31 @@ namespace TFB8.Controllers
 
             return res;
         }
+
+        // GET api/<controller>/id
+        [HttpGet()]
+        public IHttpActionResult Get(int id)
+        {
+            IHttpActionResult res;
+            Student student = new Student();
+            if (student == null)
+            {
+                res = Content(HttpStatusCode.NotFound, "Missing student with this id");
+            }
+            else
+            {
+                try
+                {
+                    student = this.studentService.GetStudentById(id);
+                    res = Ok(student);
+                }
+                catch (Exception e)
+                {
+                    res = BadRequest();
+                }
+            }
+
+            return res;
+        }
     }
 }

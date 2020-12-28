@@ -59,23 +59,24 @@ function loadSemestersDropdown() {
     });
 }
 
-//function disciplineUpdate(discipline) {
-//    var url = "/api/Discipline/" + discipline.DisciplineId;
+function studentUpdate(student) {
+    var url = "/api/Student/" + student.StudentId;
 
-//    // Call Web API to update discipline
-//    $.ajax({
-//        url: url,
-//        type: 'PUT',
-//        contentType: "application/json;charset=utf-8",
-//        data: JSON.stringify(discipline),
-//        success: function (discipline) {
-//            disciplineUpdateSuccess(discipline);
-//        },
-//        error: function (request, message, error) {
-//            handleException(request, message, error);
-//        }
-//    });
-//}
+    // Call Web API to update semester
+    $.ajax({
+        url: url,
+        type: 'PUT',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(student),
+        success: function (responseMessage) {
+            studentUpdateSuccess();
+            success(responseMessage);
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
 
 //function disciplineUpdateSuccess(discipline) {
 //    var row = document.getElementsByTagName('tbody')[0];
@@ -135,35 +136,65 @@ function formClear() {
     $('#semestersDropdown option').prop('selected', false);
 }
 
+function studentGet(ctl) {
+    // Get student id from data- attribute
+    var id = $(ctl).data("id");
 
-//function disciplineGet(ctl) {
-//    // Get discipline id from data- attribute
-//    var id = $(ctl).data("id");
+    // Store student id in hidden field
+    $("#studentid").val(id);
 
-//    // Store discipline id in hidden field
-//    $("#disciplineid").val(id);
+    // Call Web API to get a semester
+    $.ajax({
+        url: "/api/student/" + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (student) {
+            studentToFields(student);
 
-//    // Call Web API to get a discipline
-//    $.ajax({
-//        url: "/api/Discipline/" + id,
-//        type: 'GET',
-//        dataType: 'json',
-//        success: function (discipline) {
-//            disciplineToFields(discipline);
+            // Change Update Button Text
+            $("#updateButton").text("Update");
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
 
-//            // Change Update Button Text
-//            $("#updateButton").text("Update");
-//        },
-//        error: function (request, message, error) {
-//            handleException(request, message, error);
-//        }
-//    });
-//}
 
-//function disciplineToFields(discipline) {
-//    $("#disciplinename").val(discipline.DisciplineName);
-//    $("#professorname").val(discipline.ProfessorName);
-//}
+function studentToFields(student) {
+    $("#name").val(student.Name);
+    var dateofbirth = createDate(student.DateOfBirth)
+    $("#surname").val(student.Surname);
+    $("#dateofbirth").val(dateofbirth);
+    $('#semestersDropdown option:selected').removeAttr('selected');
+    var options = document.getElementById('semestersDropdown').options;
+
+    for (i = 0; i < options.length; i++) {
+        for (r = 0; r < student.Semesters.length; r++) {
+            var semesterId = parseInt(student.Semesters[r].SemesterId);
+            var optiondId = parseInt(options[i].value);
+            if (semesterId === optiondId) {
+                $('#semestersDropdown > option[value="' + optiondId + '"]').attr("selected", "selected")
+            }
+        }
+    }
+}
+
+
+function createDate(unformatedDate) {
+    var newDate = new Date(unformatedDate);
+    var day = newDate.getDate();
+    if (day < 10) {
+        day = "0" + day;
+    }
+    var year = newDate.getFullYear();
+    var month = parseInt(newDate.getMonth()) + 1;
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var date = year + "-" + month + "-" + day;
+    return date;
+}
 
 function studentsList() {
     // Call Web API to get a list of Disciplines

@@ -8,5 +8,7 @@
         IEnumerable<Student> GetAllStudents();
 
         void CreateStudent(Student student);
+
+        Student GetStudentById(int id);
     }
 }
