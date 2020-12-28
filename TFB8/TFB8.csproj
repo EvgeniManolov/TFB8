@@ -276,14 +276,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IDisciplineService.cs" />
+    <Compile Include="Interfaces\IScoreService.cs" />
     <Compile Include="Interfaces\ISemesterService.cs" />
     <Compile Include="Interfaces\IStudentService.cs" />
     <Compile Include="Models\Discipline.cs" />
+    <Compile Include="Models\DisciplineScore.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\Semester.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DisciplineService.cs" />
+    <Compile Include="Services\ScoreService.cs" />
     <Compile Include="Services\SemesterService.cs" />
     <Compile Include="Services\StudentService.cs" />
   </ItemGroup>

@@ -10,7 +10,6 @@ var Student = {
     DateOfBirth: "",
     Semesters: []
 }
-
 function updateClick() {
     // Build student object from inputs
     student = new Object();
@@ -19,14 +18,12 @@ function updateClick() {
     student.Surname = $("#surname").val();
     student.DateOfBirth = $("#dateofbirth").val();
     student.Semesters = [];
-
     var semestersIds = $('select#semestersDropdown').val();
 
     for (var i = 0; i < semestersIds.length; i++) {
         var semester = { SemesterId: semestersIds[i] };
         student.Semesters.push(semester);
     }
-
 
     if ($("#updateButton").text().trim() == "Add") {
         studentAdd(student);
@@ -62,7 +59,7 @@ function loadSemestersDropdown() {
 function studentUpdate(student) {
     var url = "/api/Student/" + student.StudentId;
 
-    // Call Web API to update semester
+    // Call Web API to update Student
     $.ajax({
         url: url,
         type: 'PUT',
@@ -122,10 +119,6 @@ function studentAddSuccess(student) {
     studentsList();
     formClear();
 }
-
-//function deleteRow() {
-//    row.parentNode.removeChild(row);
-//};
 
 
 // Clear form fields
@@ -211,50 +204,112 @@ function studentsList() {
     });
 }
 
-// Display all Disciplines returned from Web API call
+// Display all Students returned from Web API call
 function studentListSuccess(students) {
     // Iterate over the collection of data
     $.each(students,
         function (index, student) {
-            // Add a row to the Discipline table
+            // Add a row to the student table
             studentAddRow(student);
         });
 }
 
-function fillMarks(ctl) {
+function getScores(ctl) {
     $('.pop-outer').fadeIn('slow');
     var id = $(ctl).data("id");
 
-
-    function studentGet(ctl) {
-        // Get student id from data- attribute
-        var id = $(ctl).data("id");
-
-        // Store student id in hidden field
-
-        // Call Web API to get a student
-        $.ajax({
-            url: "/api/score/" + id,
-            type: 'GET',
-            dataType: 'json',
-            success: function (disciplinesscore) {
-                scoresToFields(student);
-
-                //// Change Update Button Text
-                //$("#updateButton").text("Update");
-            },
-            error: function (request, message, error) {
-                handleException(request, message, error);
-            }
+    $.ajax({
+        url: "/api/score/" + id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (disciplinesscore) {
+            scoresToFields(disciplinesscore);
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+}
+// Display all Score returned from Web API call
+function scoresToFields(disciplinesscores) {
+    // Iterate over the collection of data
+    $.each(disciplinesscores,
+        function (index, discipline) {
+            // Add a row to the score table
+            scoreAddRow(discipline);
         });
+}
+
+function scoreAddRow(discipline) {
+    if ($("#scoresTable tbody").length == 0) {
+        $("#scoresTable").append("<tbody></tbody>");
     }
+
+    // Append row to <table>
+    $("#scoresTable tbody").append(
+        scoreBuildTableRow(discipline));
+}
+
+function saveScores() {
+    var arr = $('tr[data-id]:not([data-id=""])').map(function () {
+        return {
+            id: $(this).data('id'),
+            value: $(this).find('span').text()
+        };
+    }).get();
+    var tds = $(".mark");
+
+    var scores = []
+    for (i = 0; i < tds.length; i++) {
+        score = new Object();
+        score.ScoreId = arr[i].id;
+        score.Mark = tds[i].innerText;
+        scores.push(score);
+    }
+
+    $.ajax({
+        url: "/api/Score",
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(scores),
+        success: function (scores) {
+            scoresAddSucccess();
+        },
+        error: function (request, message, error) {
+            handleException(request, message, error);
+        }
+    });
+
+}
+
+function scoresAddSucccess() {
+    $('#scoresTable tbody').empty();
+    var row = document.getElementsByTagName('tbody')[0];
+    row.parentNode.removeChild(row);
+    closeModal();
+
+
+    studentsList();
+    formClear();
+}
+
+// Build a <tr> for a row of table data
+function scoreBuildTableRow(discipline) {
+    var result = "<tr data-id='" + discipline.ScoreId + "'>" +
+        "<td>" + discipline.Discipline.DisciplineName + "</td>" +
+        "<td class='mark' " + "contenteditable='true'>" + discipline.Mark + "</td>" +
+        "</tr>";
+
+
+    return result;
 }
 
 function closeModal() {
     $('.pop-outer').fadeOut('slow');
+    $('#scoresTable tbody').empty();
 }
 
-// Add Discipline row to <table>
+// Add Student row to <table>
 function studentAddRow(student) {
     if ($("#studentTable tbody").length == 0) {
         $("#studentTable").append("<tbody></tbody>");
@@ -282,7 +337,7 @@ function studentBuildTableRow(student) {
         "<td>" + student.CurrentSemester.Name + "</td>" +
         "<td>" +
         "<button type='button' " +
-        "onclick='fillMarks(this);' " +
+        "onclick='getScores(this);' " +
         "class='btn btn-default' " +
         "data-semester-id='" + student.CurrentSemester.SemesterId + "'" +
         " data-id='" + student.ScoreId + "'>" +

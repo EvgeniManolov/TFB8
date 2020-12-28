@@ -1,17 +1,15 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using TFB8.Interfaces;
-using TFB8.Models;
-using TFB8.Services;
-
-namespace TFB8.Controllers
+﻿namespace TFB8.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+    using System.Net;
+    using System.Web.Http;
+    using TFB8.Interfaces;
+    using TFB8.Models;
+    using TFB8.Services;
+
     public class SemesterController : ApiController
     {
         string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;

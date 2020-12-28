@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace TFB8.Models
+﻿namespace TFB8.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Student
     {
         public long StudentId { get; set; }
