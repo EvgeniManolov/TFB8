@@ -10,7 +10,19 @@
 
     public class SemesterService : ISemesterService
     {
-        string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+        string connectionString = string.Empty;
+
+        public SemesterService(string conString = null)
+        {
+            if (conString != null)
+            {
+                this.connectionString = conString;
+            }
+            else
+            {
+                this.connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+            }
+        }
 
         public void CreateSemester(Semester semester)
         {

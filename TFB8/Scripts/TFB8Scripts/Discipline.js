@@ -48,6 +48,7 @@ function disciplineUpdateSuccess() {
 
     disciplinesList();
     formClear();
+    $("#updateButton").text("Add");
 }
 
 function disciplineAdd(discipline) {

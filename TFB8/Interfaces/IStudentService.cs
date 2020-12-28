@@ -10,5 +10,8 @@
         void CreateStudent(Student student);
 
         Student GetStudentById(int id);
+
+
+        void UpdateStudent(int id, Student student);
     }
 }

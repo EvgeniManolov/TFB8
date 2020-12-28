@@ -38,7 +38,7 @@ function updateClick() {
 
 
 function loadSemestersDropdown() {
-    // Call Web API to get a list of Semesters
+    // Call Web API to get a list of students
     $.ajax({
         url: '/api/Semester/',
         type: 'GET',
@@ -78,13 +78,13 @@ function studentUpdate(student) {
     });
 }
 
-//function disciplineUpdateSuccess(discipline) {
-//    var row = document.getElementsByTagName('tbody')[0];
-//    row.parentNode.removeChild(row);
+function studentUpdateSuccess() {
+    var row = document.getElementsByTagName('tbody')[0];
+    row.parentNode.removeChild(row);
 
-//    disciplinesList();
-//    formClear();
-//}
+    studentsList();
+    formClear();
+}
 
 function studentAdd(student) {
     if (student.Name === "") {
@@ -143,7 +143,7 @@ function studentGet(ctl) {
     // Store student id in hidden field
     $("#studentid").val(id);
 
-    // Call Web API to get a semester
+    // Call Web API to get a student
     $.ajax({
         url: "/api/student/" + id,
         type: 'GET',
@@ -221,8 +221,37 @@ function studentListSuccess(students) {
         });
 }
 
-function fillMarks() {
-    $('#showModal').modal('show');
+function fillMarks(ctl) {
+    $('.pop-outer').fadeIn('slow');
+    var id = $(ctl).data("id");
+
+
+    function studentGet(ctl) {
+        // Get student id from data- attribute
+        var id = $(ctl).data("id");
+
+        // Store student id in hidden field
+
+        // Call Web API to get a student
+        $.ajax({
+            url: "/api/score/" + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (disciplinesscore) {
+                scoresToFields(student);
+
+                //// Change Update Button Text
+                //$("#updateButton").text("Update");
+            },
+            error: function (request, message, error) {
+                handleException(request, message, error);
+            }
+        });
+    }
+}
+
+function closeModal() {
+    $('.pop-outer').fadeOut('slow');
 }
 
 // Add Discipline row to <table>
@@ -256,12 +285,11 @@ function studentBuildTableRow(student) {
         "onclick='fillMarks(this);' " +
         "class='btn btn-default' " +
         "data-semester-id='" + student.CurrentSemester.SemesterId + "'" +
-        " data-id='" + student.StudentId + "'>" +
+        " data-id='" + student.ScoreId + "'>" +
         "<i class='fa fa-address-book'></i>" +
         "</button>" +
         "</td>" +
         "</tr>";
-
 
 
     return result;

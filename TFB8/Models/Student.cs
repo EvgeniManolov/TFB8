@@ -18,5 +18,7 @@ namespace TFB8.Models
         public Semester CurrentSemester { get; set; }
 
         public List<Semester> Semesters { get; set; }
+
+        public int ScoreId { get; set; }
     }
 }

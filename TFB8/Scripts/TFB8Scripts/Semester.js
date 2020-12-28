@@ -64,6 +64,7 @@ function semesterUpdateSuccess() {
 
     semestersList();
     formClear();
+    $("#updateButton").text("Add");
 }
 
 function loadDisciplinesDropdown() {

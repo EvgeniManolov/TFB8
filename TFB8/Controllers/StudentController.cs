@@ -36,7 +36,7 @@ namespace TFB8.Controllers
             }
             catch (Exception e)
             {
-                res = NotFound();
+                res = this.BadRequest(e.Message);
             }
 
             return res;
@@ -95,7 +95,35 @@ namespace TFB8.Controllers
                 }
                 catch (Exception e)
                 {
-                    res = BadRequest();
+                    res = BadRequest(e.Message);
+                }
+            }
+
+            return res;
+        }
+
+        [HttpPut()]
+        public IHttpActionResult Put(int id, Student student)
+        {
+            IHttpActionResult res = null;
+            if (string.IsNullOrEmpty(student.Name))
+            {
+                res = Content(HttpStatusCode.BadRequest, "Student name is requered!");
+            }
+            else if (id == 0 || student is null)
+            {
+                res = NotFound();
+            }
+            else
+            {
+                try
+                {
+                    this.studentService.UpdateStudent(id, student);
+                    res = Content(HttpStatusCode.OK, "Successfully updated semester!");
+                }
+                catch (Exception e)
+                {
+                    res = BadRequest(e.Message);
                 }
             }
 

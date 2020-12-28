@@ -9,8 +9,19 @@
 
     public class DisciplineService : IDisciplineService
     {
-        string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+        string connectionString = string.Empty;
 
+        public DisciplineService(string conString = null)
+        {
+            if (conString != null)
+            {
+                this.connectionString = conString;
+            }
+            else
+            {
+                this.connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+            }
+        }
 
         public void CreateDiscipline(Discipline discipline)
         {
