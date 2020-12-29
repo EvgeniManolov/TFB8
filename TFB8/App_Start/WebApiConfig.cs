@@ -32,7 +32,7 @@
 
         private static void SeedDatabase()
         {
-            var connectionString = "server=localhost;userid=emanolov;password=Evgeni+9004210547;";
+            var connectionString = "server=localhost;userid=emanolov;password=test;";
             bool isDatabaseCreated = false;
 
             using (MySqlConnection con = new MySqlConnection(connectionString))
@@ -46,7 +46,7 @@
                     {
                         if (reader.HasRows)
                         {
-                            isDatabaseCreated = true;
+                            isDatabaseCreated = true; 
                         }
                     }
                 }
