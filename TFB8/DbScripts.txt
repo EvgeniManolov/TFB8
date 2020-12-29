@@ -4,7 +4,7 @@
   `professorname` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`disciplineId`),
   UNIQUE KEY `disciplinename_UNIQUE` (`professorname`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `semester` (
@@ -13,18 +13,20 @@ CREATE TABLE `semester` (
   `startdate` datetime DEFAULT NULL,
   `enddate` datetime DEFAULT NULL,
   PRIMARY KEY (`semesterid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `semesterdisciplines` (
-  `semesterdisciplinesid` int NOT NULL AUTO_INCREMENT,
   `semesterid` int NOT NULL,
   `disciplineid` int NOT NULL,
+  `semesterdisciplinesid` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`semesterdisciplinesid`),
   KEY `disciplineid_idx` (`disciplineid`),
   KEY `semester_idx` (`semesterid`),
   CONSTRAINT `discipline` FOREIGN KEY (`disciplineid`) REFERENCES `discipline` (`disciplineId`),
   CONSTRAINT `semester` FOREIGN KEY (`semesterid`) REFERENCES `semester` (`semesterid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 CREATE TABLE `student` (
@@ -33,31 +35,21 @@ CREATE TABLE `student` (
   `surname` varchar(50) NOT NULL,
   `dateofbirth` datetime NOT NULL,
   PRIMARY KEY (`studentid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
-CREATE TABLE `semesterdisciplines` (
-  `semesterid` int NOT NULL,
-  `disciplineid` int NOT NULL,
-  `semesterdisciplinesid` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`semesterdisciplinesid`),
-  KEY `disciplineid_idx` (`disciplineid`),
-  KEY `semester_idx` (`semesterid`),
-  CONSTRAINT `discipline` FOREIGN KEY (`disciplineid`) REFERENCES `discipline` (`disciplineId`),
-  CONSTRAINT `semester` FOREIGN KEY (`semesterid`) REFERENCES `semester` (`semesterid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `scores` (
   `studentid` int NOT NULL,
   `semesterdisciplinesid` int NOT NULL,
   `id` int NOT NULL AUTO_INCREMENT,
-  `score` int,
+  `score` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `studentid_idx` (`studentid`),
   KEY `semesterdisciplines_idx` (`semesterdisciplinesid`),
   CONSTRAINT `semesterdisciplines` FOREIGN KEY (`semesterdisciplinesid`) REFERENCES `semesterdisciplines` (`semesterdisciplinesid`),
   CONSTRAINT `studentid` FOREIGN KEY (`studentid`) REFERENCES `student` (`studentid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 Aggregated Data Scripts:
