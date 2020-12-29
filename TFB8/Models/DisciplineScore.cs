@@ -4,6 +4,6 @@
     {
         public int ScoreId { get; set; }
 
-        public int Mark { get; set; }
+        public int? Mark { get; set; }
     }
 }

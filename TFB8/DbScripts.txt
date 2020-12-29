@@ -51,7 +51,7 @@ CREATE TABLE `scores` (
   `studentid` int NOT NULL,
   `semesterdisciplinesid` int NOT NULL,
   `id` int NOT NULL AUTO_INCREMENT,
-  `score` int NOT NULL,
+  `score` int,
   PRIMARY KEY (`id`),
   KEY `studentid_idx` (`studentid`),
   KEY `semesterdisciplines_idx` (`semesterdisciplinesid`),

@@ -295,9 +295,13 @@ function scoresAddSucccess() {
 
 // Build a <tr> for a row of table data
 function scoreBuildTableRow(discipline) {
+    var mark = '';
+    if (discipline.Mark != null) {
+        mark = discipline.Mark;
+    }
     var result = "<tr data-id='" + discipline.ScoreId + "'>" +
         "<td>" + discipline.Discipline.DisciplineName + "</td>" +
-        "<td class='mark' " + "contenteditable='true'>" + discipline.Mark + "</td>" +
+        "<td class='mark' " + "contenteditable='true'>" + mark + "</td>" +
         "</tr>";
 
 

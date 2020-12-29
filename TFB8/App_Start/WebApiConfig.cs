@@ -15,6 +15,7 @@
             container.RegisterType(typeof(ISemesterService), typeof(SemesterService));
             container.RegisterType(typeof(IStudentService), typeof(StudentService));
             container.RegisterType(typeof(IScoreService), typeof(ScoreService));
+            container.RegisterType(typeof(IAggregateDataService), typeof(AggregateDataService));
             config.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
            
             // Web API routes
